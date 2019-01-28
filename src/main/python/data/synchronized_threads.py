@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import time
+from concurrent.futures import ThreadPoolExecutor
+from random import randrange
 from threading import Event
-from threading import Thread
 
 
 def print_names(name, my_event, next_event):
@@ -11,6 +13,7 @@ def print_names(name, my_event, next_event):
         print("{0} says hello {1}".format(name, i))
         my_event.clear()
         next_event.set()
+        time.sleep(randrange(2))
 
 
 def main():
@@ -21,9 +24,10 @@ def main():
     # Set one of the events
     event1.set()
 
-    Thread(target=print_names, args=("Bob", event1, event2)).start()
-    Thread(target=print_names, args=("Bill", event2, event3)).start()
-    Thread(target=print_names, args=("Mary", event3, event1)).start()
+    with ThreadPoolExecutor(max_workers=3) as e:
+        e.submit(print_names, "Bob", event1, event2)
+        e.submit(print_names, "Bill", event2, event3)
+        e.submit(print_names, "Mary", event3, event1)
 
 
 if __name__ == "__main__":

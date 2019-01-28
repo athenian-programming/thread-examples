@@ -1,18 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from threading import Thread
+import time
+from concurrent.futures import ThreadPoolExecutor
+from random import randrange
 
 
 def print_names(name):
     for i in range(10):
         print("{0} says hello {1}".format(name, i))
+        time.sleep(randrange(2))
 
 
 def main():
-    Thread(target=print_names, args=("Bob",)).start()
-    Thread(target=print_names, args=("Bill",)).start()
-    Thread(target=print_names, args=("Mary",)).start()
+    with ThreadPoolExecutor(max_workers=3) as e:
+        e.submit(print_names, "Bob", )
+        e.submit(print_names, "Bill", )
+        e.submit(print_names, "Mary", )
 
 
 if __name__ == "__main__":
