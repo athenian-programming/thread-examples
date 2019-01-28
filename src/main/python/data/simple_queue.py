@@ -38,12 +38,12 @@ def producer(queue):
 
 
 def main():
-    with ThreadPoolExecutor() as e:
+    with ThreadPoolExecutor() as executor:
         queue = Queue()
         for i in range(10):
             wrapper = QueueWrapper(i, queue)
-            e.submit(consumer, wrapper)
-        e.submit(producer, queue, )
+            executor.submit(consumer, wrapper)
+        executor.submit(producer, queue, )
 
 
 if __name__ == "__main__":

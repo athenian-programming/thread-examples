@@ -58,11 +58,11 @@ def consumer(id, shared_data):
 
 def main():
     shared_data = SharedData()
-    with ThreadPoolExecutor() as e:
+    with ThreadPoolExecutor() as executor:
         # We can launch an arbitrary number of consumer threads
         for i in range(3):
-            e.submit(consumer, i, shared_data)
-        e.submit(producer, shared_data, )
+            executor.submit(consumer, i, shared_data)
+        executor.submit(producer, shared_data, )
 
 
 if __name__ == "__main__":

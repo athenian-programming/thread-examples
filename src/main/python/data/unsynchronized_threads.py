@@ -13,10 +13,10 @@ def print_names(name):
 
 
 def main():
-    with ThreadPoolExecutor() as e:
-        e.submit(print_names, "Bob", )
-        e.submit(print_names, "Bill", )
-        e.submit(print_names, "Mary", )
+    with ThreadPoolExecutor() as executor:
+        executor.submit(print_names, "Bob", )
+        executor.submit(print_names, "Bill", )
+        executor.submit(print_names, "Mary", )
 
 
 if __name__ == "__main__":

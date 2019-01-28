@@ -64,9 +64,9 @@ def consumer(shared_data):
 
 def main():
     shared_data = SharedData()
-    with ThreadPoolExecutor() as e:
-        e.submit(consumer, shared_data, )
-        e.submit(producer, shared_data, )
+    with ThreadPoolExecutor() as executor:
+        executor.submit(consumer, shared_data, )
+        executor.submit(producer, shared_data, )
 
 
 if __name__ == "__main__":

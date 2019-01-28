@@ -37,13 +37,13 @@ def setter(wrappers):
 
 
 def main():
-    with ThreadPoolExecutor() as e:
+    with ThreadPoolExecutor() as executor:
         wrappers = []
         for i in range(10):
             wrapper = EventWrapper(i)
             wrappers.append(wrapper)
-            e.submit(waiter, wrapper)
-        e.submit(setter, wrappers, )
+            executor.submit(waiter, wrapper)
+        executor.submit(setter, wrappers, )
 
 
 if __name__ == "__main__":

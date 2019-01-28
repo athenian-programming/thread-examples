@@ -24,10 +24,10 @@ def main():
     # Set one of the events
     event1.set()
 
-    with ThreadPoolExecutor() as e:
-        e.submit(print_names, "Bob", event1, event2)
-        e.submit(print_names, "Bill", event2, event3)
-        e.submit(print_names, "Mary", event3, event1)
+    with ThreadPoolExecutor() as executor:
+        executor.submit(print_names, "Bob", event1, event2)
+        executor.submit(print_names, "Bill", event2, event3)
+        executor.submit(print_names, "Mary", event3, event1)
 
 
 if __name__ == "__main__":
