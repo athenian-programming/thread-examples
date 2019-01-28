@@ -26,11 +26,12 @@ class SharedData(object):
         if self.completed:
             return None
 
-        # Read from the queue with (block=False), so we will get an Empty exception when we read
+        # Read from the queue with get_nowait(), so we will get an Empty exception when we read
         # from an empty queue. This will prevent us from blocking after producer completion
         try:
-            return self.__queue.get(block=False)
+            return self.__queue.get_nowait()
         except Empty:
+            # Bail if no value is ready to be read
             return None
 
     def set_data(self, val):
@@ -39,7 +40,8 @@ class SharedData(object):
 
 def producer(shared_data):
     for i in range(20):
-        shared_data.set_data("val-{0}".format(i))
+        data = "val-{0}".format(i)
+        shared_data.set_data(data)
         # Pause a random amount of time
         time.sleep(randrange(2))
     shared_data.mark_completed()
@@ -49,7 +51,7 @@ def consumer(id, shared_data):
     while not shared_data.completed:
         data = shared_data.get_data()
         if data is not None:
-            print("consumer:{} {}".format(str(id), data))
+            print("consumer:{} {}".format(id, data))
         # Pause a random amount of time
         time.sleep(randrange(2))
 

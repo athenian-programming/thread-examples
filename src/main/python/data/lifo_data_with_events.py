@@ -46,7 +46,8 @@ class SharedData(object):
 
 def producer(shared_data):
     for i in range(20):
-        shared_data.set_data("image-{0}".format(i))
+        data = "image-{0}".format(i)
+        shared_data.set_data(data)
         # Pause a random amount of time
         time.sleep(randrange(2))
     shared_data.mark_completed()
