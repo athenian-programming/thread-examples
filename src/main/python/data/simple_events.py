@@ -23,15 +23,15 @@ class EventWrapper(object):
         self.__event.wait()
 
 
-def consumer(wrapper):
-    print("Consumer waiting on id: {}".format(wrapper.id))
+def waiter(wrapper):
+    print("Waiting on id: {}".format(wrapper.id))
     wrapper.wait()
-    print("Consumer completed id: {}".format(wrapper.id))
+    print("Completed id: {}".format(wrapper.id))
 
 
-def producer(wrappers):
+def setter(wrappers):
     for wrapper in wrappers:
-        print("Producer calling set on id: {}".format(wrapper.id))
+        print("Calling set on id: {}".format(wrapper.id))
         wrapper.set()
         time.sleep(randrange(2))
 
@@ -42,8 +42,8 @@ def main():
         for i in range(20):
             wrapper = EventWrapper(i)
             wrappers.append(wrapper)
-            e.submit(consumer, wrapper)
-        e.submit(producer, wrappers, )
+            e.submit(waiter, wrapper)
+        e.submit(setter, wrappers, )
 
 
 if __name__ == "__main__":
