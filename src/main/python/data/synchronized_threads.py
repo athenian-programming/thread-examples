@@ -8,7 +8,7 @@ from threading import Event
 
 
 def print_names(name, my_event, next_event):
-    for i in range(10):
+    for i in range(20):
         my_event.wait()
         print("{0} says hello {1}".format(name, i))
         my_event.clear()

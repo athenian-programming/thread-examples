@@ -21,19 +21,24 @@ class SharedData(object):
     def mark_completed(self):
         self.__completed.set()
 
-    def get_data(self, timeout_secs=None):
-        # Exit if the producer is already completed
+    def get_data(self):
+        # Exit if the producer completed
         if self.completed:
             return None
-        else:
+
+        # Read from the queue with (block=False), so we will get an Empty exception when we read
+        # from an empty queue. This will prevent us from blocking after producer completion
+        try:
             return self.__queue.get(block=False)
+        except Empty:
+            return None
 
     def set_data(self, val):
         self.__queue.put(val)
 
 
 def producer(shared_data):
-    for i in range(10):
+    for i in range(20):
         shared_data.set_data("val-{0}".format(i))
         # Pause a random amount of time
         time.sleep(randrange(2))
@@ -42,13 +47,9 @@ def producer(shared_data):
 
 def consumer(id, shared_data):
     while not shared_data.completed:
-        try:
-            # We read with (block=False), so we will get an Empty exception when we read
-            # from an empty queue. This will prevent us from blocking after producer finishes
-            data = shared_data.get_data()
+        data = shared_data.get_data()
+        if data is not None:
             print("consumer:{} {}".format(str(id), data))
-        except Empty:
-            pass
         # Pause a random amount of time
         time.sleep(randrange(2))
 

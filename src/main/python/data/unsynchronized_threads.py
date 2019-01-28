@@ -7,7 +7,7 @@ from random import randrange
 
 
 def print_names(name):
-    for i in range(10):
+    for i in range(20):
         print("{0} says hello {1}".format(name, i))
         time.sleep(randrange(2))
 

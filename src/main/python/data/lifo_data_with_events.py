@@ -13,11 +13,7 @@ class SharedData(object):
         self.__data = None
         self.__lock = Lock()
         self.__value_available = Event()
-        self.__value_read = Event()
         self.__completed = Event()
-
-        # Prime reader_ready with ready to not block producer
-        self.__value_read.set()
 
     @property
     def completed(self):
@@ -39,23 +35,18 @@ class SharedData(object):
             retval = self.__data
 
         self.__value_available.clear()
-        self.__value_read.set()
         return retval
 
     def set_data(self, val):
-        # Wait for value to be consumed
-        self.__value_read.wait()
-
         with self.__lock:
             self.__data = val
 
-        self.__value_read.clear()
         self.__value_available.set()
 
 
 def producer(shared_data):
     for i in range(20):
-        shared_data.set_data("val-{0}".format(i))
+        shared_data.set_data("image-{0}".format(i))
         # Pause a random amount of time
         time.sleep(randrange(2))
     shared_data.mark_completed()
@@ -75,6 +66,7 @@ def main():
     with ThreadPoolExecutor() as e:
         e.submit(consumer, shared_data, )
         e.submit(producer, shared_data, )
+
 
 if __name__ == "__main__":
     main()
