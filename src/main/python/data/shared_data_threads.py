@@ -48,12 +48,12 @@ class SharedData(object):
         # Wait for value to be consumed
         if not self.__value_read.wait(timeout_secs):
             raise TimeoutException
+        else:
+            with self.__lock:
+                self.__data = val
 
-        with self.__lock:
-            self.__data = val
-
-        self.__value_read.clear()
-        self.__value_available.set()
+            self.__value_read.clear()
+            self.__value_available.set()
 
 
 def producer(shared_data):
