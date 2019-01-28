@@ -73,7 +73,7 @@ def consumer(shared_data):
 
 def main():
     shared_data = SharedData()
-    with ThreadPoolExecutor(max_workers=3) as e:
+    with ThreadPoolExecutor() as e:
         e.submit(consumer, shared_data, )
         e.submit(producer, shared_data, )
 

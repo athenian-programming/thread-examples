@@ -43,6 +43,8 @@ def producer(shared_data):
 def consumer(id, shared_data):
     while not shared_data.completed:
         try:
+            # We read with (block=False), so we will get an Empty exception when we read
+            # from an empty queue. This will prevent us from blocking after producer finishes
             data = shared_data.get_data()
             print("consumer:{} {}".format(str(id), data))
         except Empty:
@@ -54,6 +56,7 @@ def consumer(id, shared_data):
 def main():
     shared_data = SharedData()
     with ThreadPoolExecutor() as e:
+        # We can launch an arbitrary number of consumer threads
         for i in range(3):
             e.submit(consumer, i, shared_data)
         e.submit(producer, shared_data, )

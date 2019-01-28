@@ -13,7 +13,7 @@ def print_names(name):
 
 
 def main():
-    with ThreadPoolExecutor(max_workers=3) as e:
+    with ThreadPoolExecutor() as e:
         e.submit(print_names, "Bob", )
         e.submit(print_names, "Bill", )
         e.submit(print_names, "Mary", )
