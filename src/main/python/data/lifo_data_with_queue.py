@@ -33,6 +33,7 @@ class SharedData(object):
             try:
                 return self.__queue.get(block=False)
             except Empty:
+                # Bail if no value is ready to be read
                 return None
 
     def set_data(self, val):

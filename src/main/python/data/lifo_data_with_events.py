@@ -27,8 +27,8 @@ class SharedData(object):
         if self.completed:
             return None
 
-        # Wait for value to be ready
-        if not self.__value_available.wait(timeout=1):
+        # Bail if no value is ready to be read
+        if not self.__value_available.wait(timeout=.1):
             return None
 
         with self.__lock:
