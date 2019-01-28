@@ -1,10 +1,12 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import argparse
-from leds.led import LED
 from threading import Event
 from threading import Thread
 from time import sleep
+
+from leds.led import LED
 
 
 def execute(led, reverse, pause):
@@ -24,34 +26,39 @@ def execute(led, reverse, pause):
     print("Exiting thread {0}".format(led.index))
 
 
-# Setup CLI args
-parser = argparse.ArgumentParser()
-parser.add_argument("-p", "--pause", default=0.05, type=float, help="Blink pause (secs) [0.05]")
-parser.add_argument("-r", "--reverse", default=False, action="store_true", help="Reverse blink direction [false]")
-args = vars(parser.parse_args())
+def main():
+    # Setup CLI args
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-p", "--pause", default=0.05, type=float, help="Blink pause (secs) [0.05]")
+    parser.add_argument("-r", "--reverse", default=False, action="store_true", help="Reverse blink direction [false]")
+    args = vars(parser.parse_args())
 
-stopped = False
+    stopped = False
 
-# Create LED objects
-leds = [LED(j) for j in range(8)]
+    # Create LED objects
+    leds = [LED(j) for j in range(8)]
 
-# Assign neighbors to each led -- leds on end wrap around
-for i, led in enumerate(leds):
-    led.event = Event()
-    led.left = leds[i - 1] if i > 0 else leds[7]
-    led.right = leds[i + 1] if i < 7 else leds[0]
+    # Assign neighbors to each led -- leds on end wrap around
+    for i, led in enumerate(leds):
+        led.event = Event()
+        led.left = leds[i - 1] if i > 0 else leds[7]
+        led.right = leds[i + 1] if i < 7 else leds[0]
 
-# Start threads
-for led in leds:
-    t = Thread(target=execute, args=(led, args["reverse"], args["pause"]))
-    t.start()
+    # Start threads
+    for led in leds:
+        t = Thread(target=execute, args=(led, args["reverse"], args["pause"]))
+        t.start()
 
-# Prime the pump
-leds[0].event.set()
+    # Prime the pump
+    leds[0].event.set()
 
-try:
-    while True:
-        sleep(60)
-except KeyboardInterrupt:
-    stopped = True
-    print("Exiting...")
+    try:
+        while True:
+            sleep(60)
+    except KeyboardInterrupt:
+        stopped = True
+        print("Exiting...")
+
+
+if __name__ == "__main__":
+    main()

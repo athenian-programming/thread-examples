@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import time
-from data.timeout_exception import TimeoutException
 from random import randrange
 from threading import Event
 from threading import Lock
 from threading import Thread
+
+from data.timeout_exception import TimeoutException
 
 
 class SharedData(object):
@@ -15,9 +16,6 @@ class SharedData(object):
         self.__lock = Lock()
         self.__val_available = Event()
         self.__completed = Event()
-        # self.__val_read = Event()
-        # Initialize to make value settable
-        # self.__val_read.set()
 
     @property
     def completed(self):
@@ -27,7 +25,7 @@ class SharedData(object):
         self.__completed.set()
 
     def get_data(self, timeout_secs=None):
-        # Exit if the producer is completed
+        # Exit if the producer is already completed
         if self.completed:
             return None
 
@@ -39,7 +37,6 @@ class SharedData(object):
         return retval
 
     def set_data(self, val):
-        # self.__val_read.wait()
         with self.__lock:
             self.__data = val
         self.__val_available.set()
