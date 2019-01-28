@@ -39,7 +39,7 @@ def setter(wrappers):
 def main():
     with ThreadPoolExecutor() as e:
         wrappers = []
-        for i in range(20):
+        for i in range(10):
             wrapper = EventWrapper(i)
             wrappers.append(wrapper)
             e.submit(waiter, wrapper)
