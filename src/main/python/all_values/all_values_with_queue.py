@@ -6,26 +6,25 @@ from concurrent.futures import ThreadPoolExecutor
 from queue import Queue
 from random import randrange
 from threading import Event
-from threading import Lock
 
-from latest_value.queue_context import QueueContext
+from all_values.queue_context import QueueContext
 
 
-def consumer(context):
+def consumer(id, context):
     while not context.completed:
         data = context.get_data()
         if data is not None:
-            print("Consumed {}".format(data))
+            print("Consumer {} got {}".format(id, data))
         # Pause a random amount of time
-        time.sleep(randrange(3))
+        time.sleep(randrange(2))
     print("Consumer finished")
 
 
 def producer(context, count):
     for i in range(count):
-        data = "image-{0}".format(i)
+        data = "val-{0}".format(i)
+        print("Producer put {}".format(data))
         context.set_data(data)
-        print("Put {}".format(data))
         # Pause a random amount of time
         time.sleep(randrange(2))
     context.mark_completed()
@@ -34,14 +33,14 @@ def producer(context, count):
 
 def main():
     count = 10
-    # Set the maximum size of the Queue to be 1
-    queue = Queue(maxsize=1)
-    lock = Lock()
+    queue = Queue()
     completed = Event()
-    context = QueueContext(queue, lock, completed)
+    context = QueueContext(queue, completed)
 
     with ThreadPoolExecutor() as executor:
-        executor.submit(consumer, context, )
+        # Can launch an arbitrary number of consumer threads
+        for i in range(3):
+            executor.submit(consumer, i, context, )
         executor.submit(producer, context, count, )
 
 

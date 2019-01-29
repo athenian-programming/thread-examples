@@ -8,7 +8,7 @@ from threading import Event
 from threading import Lock
 
 
-class Context(object):
+class EventContext(object):
     def __init__(self):
         self.__data = None
         self.__lock = Lock()
@@ -63,8 +63,8 @@ def consumer(context):
     print("Consumer finished")
 
 
-def producer(context):
-    for i in range(20):
+def producer(context, count):
+    for i in range(count):
         data = "val-{0}".format(i)
         print("Put {}".format(data))
         context.set_data(data)
@@ -75,10 +75,12 @@ def producer(context):
 
 
 def main():
-    context = Context()
+    count = 10
+    context = EventContext()
+
     with ThreadPoolExecutor() as executor:
         executor.submit(consumer, context, )
-        executor.submit(producer, context, )
+        executor.submit(producer, context, count, )
 
 
 if __name__ == "__main__":

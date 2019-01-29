@@ -5,31 +5,9 @@ import time
 from concurrent.futures import ProcessPoolExecutor
 from multiprocessing import Manager
 from queue import Empty
-
 from random import randrange
 
-
-class Context(object):
-    def __init__(self, manager):
-        self.__queue = manager.Queue()
-        self.__completed = manager.Event()
-
-    @property
-    def completed(self):
-        return self.__completed.is_set() and self.__queue.qsize() == 0
-
-    def mark_completed(self):
-        self.__completed.set()
-
-    def get_data(self):
-        try:
-            data = self.__queue.get(block=True, timeout=1)
-            return data
-        except Empty:
-            return None
-
-    def set_data(self, val):
-        self.__queue.put(val)
+from all_values.queue_context import QueueContext
 
 
 def consumer(id, context):
@@ -43,8 +21,8 @@ def consumer(id, context):
     print("Consumer finished")
 
 
-def producer(context):
-    for i in range(10):
+def producer(context, count):
+    for i in range(count):
         data = "val-{}".format(i)
         print("Producer put {}".format(data))
         context.set_data(data)
@@ -54,14 +32,18 @@ def producer(context):
 
 
 def main():
+    count = 10
+    # Create Manager
+    manager = Manager()
+    queue = manager.Queue()
+    completed = manager.Event()
+    context = QueueContext(queue, completed)
+
     with ProcessPoolExecutor() as executor:
-        # Create Manager
-        manager = Manager()
-        context = Context(manager)
-        # Can start multiple consumers
+        # Can launch an arbitrary number of consumer processes
         for i in range(1):
             executor.submit(consumer, i, context, )
-        executor.submit(producer, context, )
+        executor.submit(producer, context, count, )
 
 
 if __name__ == "__main__":

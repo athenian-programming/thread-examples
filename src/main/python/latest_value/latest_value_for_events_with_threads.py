@@ -67,6 +67,7 @@ def producer(context):
 
 def main():
     context = Context()
+
     with ThreadPoolExecutor() as executor:
         executor.submit(consumer, context, )
         executor.submit(producer, context, )

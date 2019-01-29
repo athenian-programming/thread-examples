@@ -23,10 +23,11 @@ def producer(queue, count):
 
 
 def main():
+    count = 10
+    manager = Manager()
+    queue = manager.Queue()
+
     with ProcessPoolExecutor() as executor:
-        manager = Manager()
-        queue = manager.Queue()
-        count = 10
         executor.submit(consumer, queue, count, )
         executor.submit(producer, queue, count, )
 

@@ -22,9 +22,10 @@ def producer(queue, count):
 
 
 def main():
+    count = 10
+    queue = Queue()
+
     with ThreadPoolExecutor() as executor:
-        queue = Queue()
-        count = 10
         for i in range(count):
             executor.submit(consumer, i, queue, )
         executor.submit(producer, queue, count, )
