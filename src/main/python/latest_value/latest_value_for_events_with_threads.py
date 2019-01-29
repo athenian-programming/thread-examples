@@ -8,16 +8,12 @@ from threading import Event
 from threading import Lock
 
 
-class SharedData(object):
+class Context(object):
     def __init__(self):
         self.__data = None
         self.__lock = Lock()
         self.__value_available = Event()
-        self.__value_read = Event()
         self.__completed = Event()
-
-        # Prime reader_ready with ready to not block producer
-        self.__value_read.set()
 
     @property
     def completed(self):
@@ -31,52 +27,49 @@ class SharedData(object):
         if self.completed:
             return None
 
-        # Wait for value to be ready
-        if not self.__value_available.wait(timeout=1):
+        # Bail if no value is ready to be read
+        if not self.__value_available.wait(timeout=.1):
             return None
 
         with self.__lock:
             retval = self.__data
 
         self.__value_available.clear()
-        self.__value_read.set()
         return retval
 
     def set_data(self, val):
-        # Wait for value to be consumed
-        self.__value_read.wait()
-
         with self.__lock:
             self.__data = val
 
-        self.__value_read.clear()
         self.__value_available.set()
 
 
-def producer(shared_data):
-    for i in range(20):
-        data = "val-{0}".format(i)
-        shared_data.set_data(data)
-        # Pause a random amount of time
-        time.sleep(randrange(2))
-    shared_data.mark_completed()
-    print("Producer finished")
-
-def consumer(shared_data):
-    while not shared_data.completed:
-        data = shared_data.get_data()
+def consumer(context):
+    while not context.completed:
+        data = context.get_data()
         if data is not None:
-            print("Consumed: {}".format(data))
+            print("Consumed {}".format(data))
         # Pause a random amount of time
         time.sleep(randrange(2))
     print("Consumer finished")
 
 
+def producer(context):
+    for i in range(20):
+        data = "image-{0}".format(i)
+        print("Put {}".format(data))
+        context.set_data(data)
+        # Pause a random amount of time
+        time.sleep(randrange(2))
+    context.mark_completed()
+    print("Producer finished")
+
+
 def main():
-    shared_data = SharedData()
+    context = Context()
     with ThreadPoolExecutor() as executor:
-        executor.submit(consumer, shared_data, )
-        executor.submit(producer, shared_data, )
+        executor.submit(consumer, context, )
+        executor.submit(producer, context, )
 
 
 if __name__ == "__main__":

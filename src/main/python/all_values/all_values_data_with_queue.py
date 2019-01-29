@@ -8,9 +8,8 @@ from random import randrange
 from threading import Event
 
 
-class SharedData(object):
+class Context(object):
     def __init__(self):
-        self.__data = None
         self.__queue = Queue()
         self.__completed = Event()
 
@@ -38,32 +37,34 @@ class SharedData(object):
         self.__queue.put(val)
 
 
-def producer(shared_data):
-    for i in range(20):
-        data = "val-{0}".format(i)
-        shared_data.set_data(data)
-        # Pause a random amount of time
-        time.sleep(randrange(2))
-    shared_data.mark_completed()
-    print("Producer finished")
-
-def consumer(id, shared_data):
-    while not shared_data.completed:
-        data = shared_data.get_data()
+def consumer(id, context):
+    while not context.completed:
+        data = context.get_data()
         if data is not None:
-            print("consumer:{} {}".format(id, data))
+            print("Consumer {} got {}".format(id, data))
         # Pause a random amount of time
         time.sleep(randrange(2))
     print("Consumer finished")
 
 
+def producer(context):
+    for i in range(20):
+        data = "val-{0}".format(i)
+        print("Producer put {}".format(data))
+        context.set_data(data)
+        # Pause a random amount of time
+        time.sleep(randrange(2))
+    context.mark_completed()
+    print("Producer finished")
+
+
 def main():
-    shared_data = SharedData()
+    context = Context()
     with ThreadPoolExecutor() as executor:
         # We can launch an arbitrary number of consumer threads
         for i in range(3):
-            executor.submit(consumer, i, shared_data, )
-        executor.submit(producer, shared_data, )
+            executor.submit(consumer, i, context, )
+        executor.submit(producer, context, )
 
 
 if __name__ == "__main__":

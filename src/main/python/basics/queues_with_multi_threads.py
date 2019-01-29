@@ -8,15 +8,15 @@ from random import randrange
 
 
 def consumer(id, queue):
-    print("Waiting on id: {}".format(id))
+    print("Consumer {} waiting".format(id))
     data = queue.get()
-    print("Consumed id: {} got data: {}".format(id, data))
+    print("Consumer {} got {}".format(id, data))
 
 
-def producer(queue):
-    for i in range(10):
+def producer(queue, count):
+    for i in range(count):
         data = "val-{}".format(i)
-        print("Producer putting data on queue {}".format(data))
+        print("Producer put {}".format(data))
         queue.put(data)
         time.sleep(randrange(2))
 
@@ -24,9 +24,10 @@ def producer(queue):
 def main():
     with ThreadPoolExecutor() as executor:
         queue = Queue()
-        for i in range(10):
+        count = 10
+        for i in range(count):
             executor.submit(consumer, i, queue, )
-        executor.submit(producer, queue, )
+        executor.submit(producer, queue, count, )
 
 
 if __name__ == "__main__":

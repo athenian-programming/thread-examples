@@ -2,20 +2,18 @@
 # -*- coding: utf-8 -*-
 
 import time
-from concurrent.futures import ThreadPoolExecutor
-from queue import Queue, Empty
+from concurrent.futures import ProcessPoolExecutor
+from multiprocessing import Manager
+from queue import Empty
 from random import randrange
-from threading import Event
-from threading import Lock
 
 
-class SharedData(object):
-    def __init__(self):
-        self.__data = None
-        self.__lock = Lock()
+class Context(object):
+    def __init__(self, manager):
         # Set the maximum size of the Queue to be 1
-        self.__queue = Queue(maxsize=1)
-        self.__completed = Event()
+        self.__queue = manager.Queue(maxsize=1)
+        self.__lock = manager.Lock()
+        self.__completed = manager.Event()
 
     @property
     def completed(self):
@@ -45,34 +43,38 @@ class SharedData(object):
             if self.__queue.full():
                 # Empty the queue if item is already present
                 discarded = self.__queue.get()
-                print("Discarded: {}".format(discarded))
+                print("Discarded {}".format(discarded))
+            print("Put{}".format(val))
             self.__queue.put(val)
 
 
-def producer(shared_data):
-    for i in range(20):
-        data = "image-{0}".format(i)
-        shared_data.set_data(data)
-        # Pause a random amount of time
-        time.sleep(randrange(2))
-    shared_data.mark_completed()
-    print("Producer finished")
-
-def consumer(shared_data):
-    while not shared_data.completed:
-        data = shared_data.get_data()
+def consumer(context):
+    while not context.completed:
+        data = context.get_data()
         if data is not None:
-            print("Consumed: {}".format(data))
+            print("Consumed {}".format(data))
         # Pause a random amount of time
         time.sleep(randrange(3))
     print("Consumer finished")
 
 
+def producer(context):
+    for i in range(20):
+        data = "image-{0}".format(i)
+        context.set_data(data)
+        # Pause a random amount of time
+        time.sleep(randrange(2))
+    context.mark_completed()
+    print("Producer finished")
+
+
 def main():
-    shared_data = SharedData()
-    with ThreadPoolExecutor() as executor:
-        executor.submit(consumer, shared_data, )
-        executor.submit(producer, shared_data, )
+    # Create Manager to grab a queue and an event
+    manager = Manager()
+    context = Context(manager)
+    with ProcessPoolExecutor() as executor:
+        executor.submit(consumer, context, )
+        executor.submit(producer, context, )
 
 
 if __name__ == "__main__":
