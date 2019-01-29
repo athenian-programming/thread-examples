@@ -55,7 +55,7 @@ def producer(context):
 
 def main():
     with ProcessPoolExecutor() as executor:
-        # Create Manager to grab a queue and an event
+        # Create Manager
         manager = Manager()
         context = Context(manager)
         # Can start multiple consumers
