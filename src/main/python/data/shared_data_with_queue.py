@@ -61,7 +61,7 @@ def main():
     with ThreadPoolExecutor() as executor:
         # We can launch an arbitrary number of consumer threads
         for i in range(3):
-            executor.submit(consumer, i, shared_data)
+            executor.submit(consumer, i, shared_data, )
         executor.submit(producer, shared_data, )
 
 

@@ -42,7 +42,7 @@ def main():
         for i in range(10):
             wrapper = EventWrapper(i)
             wrappers.append(wrapper)
-            executor.submit(waiter, wrapper)
+            executor.submit(waiter, wrapper, )
         executor.submit(setter, wrappers, )
 
 

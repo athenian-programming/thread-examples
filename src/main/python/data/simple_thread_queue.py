@@ -7,26 +7,10 @@ from queue import Queue
 from random import randrange
 
 
-class QueueWrapper(object):
-    def __init__(self, id, queue):
-        self.__id = id
-        self.__queue = queue
-
-    @property
-    def id(self):
-        return self.__id
-
-    def put(self, data):
-        self.__queue.put(data)
-
-    def get(self):
-        return self.__queue.get()
-
-
-def consumer(wrapper):
-    print("Waiting on id: {}".format(wrapper.id))
-    data = wrapper.get()
-    print("Consumed id: {} got data: {}".format(wrapper.id, data))
+def consumer(id, queue):
+    print("Waiting on id: {}".format(id))
+    data = queue.get()
+    print("Consumed id: {} got data: {}".format(id, data))
 
 
 def producer(queue):
@@ -41,8 +25,7 @@ def main():
     with ThreadPoolExecutor() as executor:
         queue = Queue()
         for i in range(10):
-            wrapper = QueueWrapper(i, queue)
-            executor.submit(consumer, wrapper)
+            executor.submit(consumer, i, queue, )
         executor.submit(producer, queue, )
 
 
