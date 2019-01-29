@@ -32,12 +32,15 @@ def producer(context, count):
 
 def main():
     count = 20
+
     # Create a Manager
     manager = Manager()
+
     # Set the maximum size of the Queue to be 1
     queue = manager.Queue(maxsize=1)
     lock = manager.Lock()
     completed = manager.Event()
+
     context = QueueContext(queue, lock, completed)
 
     with ProcessPoolExecutor() as executor:

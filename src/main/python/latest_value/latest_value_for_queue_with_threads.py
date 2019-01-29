@@ -34,10 +34,12 @@ def producer(context, count):
 
 def main():
     count = 20
+
     # Set the maximum size of the Queue to be 1
     queue = Queue(maxsize=1)
     lock = Lock()
     completed = Event()
+
     context = QueueContext(queue, lock, completed)
 
     with ThreadPoolExecutor() as executor:
