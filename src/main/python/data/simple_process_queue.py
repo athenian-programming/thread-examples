@@ -17,6 +17,7 @@ def consumer(id, queue, completed_event):
         except Empty:
             continue
         print("Consumed id: {} got data: {}".format(id, data))
+    print("Consumer finished")
 
 
 def producer(queue, completed_event):
@@ -26,6 +27,7 @@ def producer(queue, completed_event):
         queue.put(data)
         time.sleep(randrange(2))
     completed_event.set()
+    print("Producer finished")
 
 
 def main():

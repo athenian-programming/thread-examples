@@ -45,7 +45,7 @@ def producer(shared_data):
         # Pause a random amount of time
         time.sleep(randrange(2))
     shared_data.mark_completed()
-
+    print("Producer finished")
 
 def consumer(id, shared_data):
     while not shared_data.completed:
@@ -54,6 +54,7 @@ def consumer(id, shared_data):
             print("consumer:{} {}".format(id, data))
         # Pause a random amount of time
         time.sleep(randrange(2))
+    print("Consumer finished")
 
 
 def main():

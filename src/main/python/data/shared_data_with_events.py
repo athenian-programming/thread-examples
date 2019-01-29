@@ -60,15 +60,16 @@ def producer(shared_data):
         # Pause a random amount of time
         time.sleep(randrange(2))
     shared_data.mark_completed()
-
+    print("Producer finished")
 
 def consumer(shared_data):
     while not shared_data.completed:
         data = shared_data.get_data()
         if data is not None:
-            print(data)
+            print("Consumed: {}".format(data))
         # Pause a random amount of time
         time.sleep(randrange(2))
+    print("Consumer finished")
 
 
 def main():

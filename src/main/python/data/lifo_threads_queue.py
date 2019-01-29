@@ -3,6 +3,7 @@
 
 import time
 from concurrent.futures import ThreadPoolExecutor
+from queue import Queue, Empty
 from random import randrange
 from threading import Event
 from threading import Lock
@@ -12,12 +13,14 @@ class SharedData(object):
     def __init__(self):
         self.__data = None
         self.__lock = Lock()
-        self.__value_available = Event()
+        # Set the maximum size of the Queue to be 1
+        self.__queue = Queue(maxsize=1)
         self.__completed = Event()
 
     @property
     def completed(self):
-        return self.__completed.is_set()
+        with self.__lock:
+            return self.__completed.is_set() and self.__queue.qsize() == 0
 
     def mark_completed(self):
         self.__completed.set()
@@ -27,21 +30,23 @@ class SharedData(object):
         if self.completed:
             return None
 
-        # Bail if no value is ready to be read
-        if not self.__value_available.wait(timeout=.1):
-            return None
-
         with self.__lock:
-            retval = self.__data
-
-        self.__value_available.clear()
-        return retval
+            # Read from the queue with get_nowait(), so we will get an Empty exception when we read
+            # from an empty queue. This will prevent us from blocking after producer completion
+            try:
+                return self.__queue.get_nowait()
+            except Empty:
+                # Bail if no value is ready to be read
+                return None
 
     def set_data(self, val):
         with self.__lock:
-            self.__data = val
-
-        self.__value_available.set()
+            # The queue will be full if the last item assigned has not already been read
+            if self.__queue.full():
+                # Empty the queue if item is already present
+                discarded = self.__queue.get()
+                print("Discarded: {}".format(discarded))
+            self.__queue.put(val)
 
 
 def producer(shared_data):
@@ -51,15 +56,16 @@ def producer(shared_data):
         # Pause a random amount of time
         time.sleep(randrange(2))
     shared_data.mark_completed()
-
+    print("Producer finished")
 
 def consumer(shared_data):
     while not shared_data.completed:
         data = shared_data.get_data()
         if data is not None:
-            print(data)
+            print("Consumed: {}".format(data))
         # Pause a random amount of time
-        time.sleep(randrange(2))
+        time.sleep(randrange(3))
+    print("Consumer finished")
 
 
 def main():
