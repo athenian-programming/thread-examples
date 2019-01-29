@@ -10,9 +10,9 @@ from random import randrange
 
 class Context(object):
     def __init__(self, manager):
+        self.__lock = manager.Lock()
         # Set the maximum size of the Queue to be 1
         self.__queue = manager.Queue(maxsize=1)
-        self.__lock = manager.Lock()
         self.__completed = manager.Event()
 
     @property

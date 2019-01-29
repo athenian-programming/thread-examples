@@ -11,7 +11,6 @@ from threading import Lock
 
 class Context(object):
     def __init__(self):
-        self.__data = None
         self.__lock = Lock()
         # Set the maximum size of the Queue to be 1
         self.__queue = Queue(maxsize=1)
