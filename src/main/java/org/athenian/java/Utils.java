@@ -1,4 +1,4 @@
-package org.athenian;
+package org.athenian.java;
 
 public class Utils {
   public static void sleepSecs(final long secs) {

@@ -1,4 +1,4 @@
-package org.athenian;
+package org.athenian.java;
 
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -11,13 +11,13 @@ public class MultiWorkerOneNotifierWakeOne {
 
     final ExecutorService executor = Executors.newCachedThreadPool();
     final Object monitor = new Object();
+    final Random random = new Random();
 
     executor.submit(() -> {
-      Random random = new Random();
       while (true) {
         long secs = random.nextInt(10);
         System.out.println(String.format("Notifier thread sleeping %d secs...", secs));
-        Utils.sleepSecs(secs);
+        Utils.INSTANCE.sleepSecs(secs);
 
         System.out.println("Notifier thread waking a single worker thread()");
         synchronized (monitor) {

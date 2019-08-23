@@ -1,4 +1,4 @@
-package org.athenian;
+package org.athenian.java;
 
 public class SynchronizationTypes {
 
@@ -31,7 +31,7 @@ public class SynchronizationTypes {
 
   // Equivalent to syncStaticMethod()
   static void nonsyncStaticMethod() {
-    synchronized (SynchronizationTypes.class) {
+    synchronized (org.athenian.kotlin.SynchronizationTypes.class) {
       // Method actions
     }
   }

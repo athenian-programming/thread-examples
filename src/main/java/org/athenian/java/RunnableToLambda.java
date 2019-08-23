@@ -1,4 +1,6 @@
-package org.athenian;
+package org.athenian.java;
+
+import org.athenian.kotlin.Utils;
 
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
@@ -21,7 +23,7 @@ public class RunnableToLambda {
           public void run() {
             long secs = random.nextInt(10);
             System.out.println(String.format("Non-lambda thread sleeping %d secs...", secs));
-            Utils.sleepSecs(secs);
+            org.athenian.kotlin.Utils.sleepSecs(secs);
             latch.countDown();
             System.out.println("Non-lambda thread finished");
           }
@@ -32,7 +34,7 @@ public class RunnableToLambda {
         () -> {
           long secs = random.nextInt(10);
           System.out.println(String.format("Lambda thread sleeping %d secs...", secs));
-          Utils.sleepSecs(secs);
+          Utils.INSTANCE.sleepSecs(secs);
           latch.countDown();
           System.out.println("Lambda thread finished");
         });

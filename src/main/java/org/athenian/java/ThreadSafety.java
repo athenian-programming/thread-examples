@@ -1,4 +1,4 @@
-package org.athenian;
+package org.athenian.java;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -102,5 +102,4 @@ public class ThreadSafety {
       return this.count.get();
     }
   }
-
 }

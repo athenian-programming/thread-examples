@@ -1,4 +1,4 @@
-package org.athenian;
+package org.athenian.java;
 
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -11,6 +11,7 @@ public class OneWorkerMultiNotifier {
 
     final ExecutorService executor = Executors.newCachedThreadPool();
     final Object monitor = new Object();
+    final Random random = new Random();
 
     executor.submit(() -> {
       while (true) {
@@ -31,11 +32,10 @@ public class OneWorkerMultiNotifier {
     IntStream.range(0, 3)
              .forEach((i) -> {
                executor.submit(() -> {
-                 Random random = new Random();
                  while (true) {
                    long sleepTime = random.nextInt(5);
                    System.out.println(String.format("Notifier thread(%d) sleeping %d secs...", i, sleepTime));
-                   Utils.sleepSecs(sleepTime);
+                   Utils.INSTANCE.sleepSecs(sleepTime);
 
                    System.out.println(String.format("Notifier thread(%d) calling notify()", i));
                    synchronized (monitor) {
