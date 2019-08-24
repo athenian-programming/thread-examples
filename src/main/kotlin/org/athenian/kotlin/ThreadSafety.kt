@@ -34,10 +34,10 @@ fun main() {
     // Wait for all jobs to complete
     latch.await()
 
-    println(String.format("Non-thread-safe counter value = %d", nonThreadSafeCounter.value()))
-    println(String.format("Synchronized method counter value = %d", synchronizedMethodCounter.value()))
-    println(String.format("Synchronized block counter value = %d", synchronizedBlockCounter.value()))
-    println(String.format("Atomic counter value = %d", atomicCounter.value()))
+    println("Non-thread-safe counter value = ${nonThreadSafeCounter.value()}")
+    println("Synchronized method counter value = ${synchronizedMethodCounter.value()}")
+    println("Synchronized block counter value = ${synchronizedBlockCounter.value()}")
+    println("Atomic counter value = ${atomicCounter.value()}")
 
     // Shutdown the thread pool before exiting
     println("Shutting down Executor")

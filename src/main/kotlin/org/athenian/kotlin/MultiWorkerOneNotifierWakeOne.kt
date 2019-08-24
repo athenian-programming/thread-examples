@@ -11,7 +11,7 @@ fun main() {
     executor.submit {
         while (true) {
             val secs = Random.nextInt(10).toLong()
-            println(String.format("Notifier thread sleeping %d secs...", secs))
+            println("Notifier thread sleeping $secs secs...")
             sleepSecs(secs)
 
             println("Notifier thread waking a single worker thread()")
@@ -24,7 +24,7 @@ fun main() {
     (0..3).forEach { i ->
         executor.submit {
             while (true) {
-                println(String.format("Worker thread(%d) waiting...", i))
+                println("Worker thread($i) waiting...")
                 try {
                     synchronized(monitor) {
                         monitor.wait()
@@ -33,7 +33,7 @@ fun main() {
                     e.printStackTrace()
                 }
 
-                println(String.format("Main thread(%d) done waiting on monitor", i))
+                println("Main thread($i) done waiting on monitor")
             }
         }
     }

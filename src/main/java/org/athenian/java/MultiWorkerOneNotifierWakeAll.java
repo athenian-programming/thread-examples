@@ -17,7 +17,7 @@ public class MultiWorkerOneNotifierWakeAll {
       while (true) {
         long secs = random.nextInt(10);
         System.out.println(String.format("Notifier thread sleeping %d secs...", secs));
-        Utils.INSTANCE.sleepSecs(secs);
+        Utils.sleepSecs(secs);
 
         System.out.println("Notifier thread waking all worker threads()");
         synchronized (monitor) {

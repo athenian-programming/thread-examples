@@ -27,10 +27,10 @@ fun main() {
         executor.submit {
             while (true) {
                 val sleepTime = Random.nextInt(5).toLong()
-                println(String.format("Notifier thread(%d) sleeping %d secs...", i, sleepTime))
+                println("Notifier thread($i) sleeping $sleepTime secs...")
                 sleepSecs(sleepTime)
 
-                println(String.format("Notifier thread(%d) calling notify()", i))
+                println("Notifier thread($i) calling notify()")
                 synchronized(monitor) {
                     monitor.notify()
                 }
