@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 public class ThreadSafety {
 
   public static void main(String... args)
-      throws InterruptedException {
+          throws InterruptedException {
 
     final int JOB_COUNT = 100;
     final int INC_COUNT = 1000;
@@ -22,20 +22,20 @@ public class ThreadSafety {
     final AtomicCounter atomicCounter = new AtomicCounter();
 
     IntStream.range(0, JOB_COUNT)
-             .forEach((i) ->
-                          executor.submit(
-                              () -> {
-                                IntStream.range(0, INC_COUNT)
-                                         .forEach((j) -> {
-                                           nonThreadSafeCounter.increment();
-                                           synchronizedMethodCounter.increment();
-                                           synchronizedBlockCounter.increment();
-                                           atomicCounter.increment();
-                                         });
-                                // Indicate job is complete
-                                latch.countDown();
-                              })
-             );
+            .forEach((i) ->
+                    executor.submit(
+                            () -> {
+                              IntStream.range(0, INC_COUNT)
+                                      .forEach((j) -> {
+                                        nonThreadSafeCounter.increment();
+                                        synchronizedMethodCounter.increment();
+                                        synchronizedBlockCounter.increment();
+                                        atomicCounter.increment();
+                                      });
+                              // Indicate job is complete
+                              latch.countDown();
+                            })
+            );
 
     // Wait for all jobs to complete
     latch.await();

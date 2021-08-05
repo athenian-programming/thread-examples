@@ -3,12 +3,11 @@
 
 import time
 from concurrent.futures import ThreadPoolExecutor
+from latest_value.queue_context import QueueContext
 from queue import Queue
 from random import randrange
 from threading import Event
 from threading import Lock
-
-from latest_value.queue_context import QueueContext
 
 
 def consumer(context):

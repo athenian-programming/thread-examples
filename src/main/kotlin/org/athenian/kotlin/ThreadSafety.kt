@@ -17,19 +17,19 @@ fun main() {
     val atomicCounter = AtomicCounter()
 
     (0..JOB_COUNT)
-            .forEach { i ->
-                executor.submit {
-                    (0..INC_COUNT)
-                            .forEach { j ->
-                                nonThreadSafeCounter.increment()
-                                synchronizedMethodCounter.increment()
-                                synchronizedBlockCounter.increment()
-                                atomicCounter.increment()
-                            }
-                    // Indicate job is complete
-                    latch.countDown()
-                }
+        .forEach { i ->
+            executor.submit {
+                (0..INC_COUNT)
+                    .forEach { j ->
+                        nonThreadSafeCounter.increment()
+                        synchronizedMethodCounter.increment()
+                        synchronizedBlockCounter.increment()
+                        atomicCounter.increment()
+                    }
+                // Indicate job is complete
+                latch.countDown()
             }
+        }
 
     // Wait for all jobs to complete
     latch.await()

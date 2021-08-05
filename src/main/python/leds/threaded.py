@@ -4,10 +4,9 @@
 import argparse
 import random
 import time
+from leds.led import LED
 from threading import Thread
 from time import sleep
-
-from leds.led import LED
 
 
 def execute(led, pause):

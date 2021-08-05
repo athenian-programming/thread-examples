@@ -3,10 +3,9 @@
 
 import time
 from concurrent.futures import ProcessPoolExecutor
+from latest_value.queue_context import QueueContext
 from multiprocessing import Manager
 from random import randrange
-
-from latest_value.queue_context import QueueContext
 
 
 def consumer(context):

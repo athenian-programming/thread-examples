@@ -2,11 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+from leds.led import LED
 from threading import Event
 from threading import Thread
 from time import sleep
-
-from leds.led import LED
 
 
 def execute(led, reverse, pause):

@@ -2,8 +2,8 @@ package org.athenian.java;
 
 public class SynchronizationTypes {
 
-  static final Object staticVal   = new Object();
-  final        Object instanceVal = new Object();
+  static final Object staticVal = new Object();
+  final Object instanceVal = new Object();
 
     /*
     The synchronized keyword can be used in 4 circumstances:

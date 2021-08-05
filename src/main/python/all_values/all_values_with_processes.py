@@ -2,12 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import time
+from all_values.queue_context import QueueContext
 from concurrent.futures import ProcessPoolExecutor
 from multiprocessing import Manager
 from queue import Empty
 from random import randrange
-
-from all_values.queue_context import QueueContext
 
 
 def consumer(id, context):

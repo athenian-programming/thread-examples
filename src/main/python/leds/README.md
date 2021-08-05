@@ -1,8 +1,8 @@
 # Threads Intro
 
-## Sequential blinks in a single thread 
+## Sequential blinks in a single thread
 
-### Usage 
+### Usage
 
 ```bash
 $ ./non_threaded.py 
@@ -16,7 +16,7 @@ $ ./non_threaded.py
 
 ## Overlapping, random blinks in multiple threads
 
-### Usage 
+### Usage
 
 ```bash
 $ ./threaded.py 
@@ -28,10 +28,9 @@ $ ./threaded.py
 |:---------------|----------------------------------------------------|---------|
 | -p, --pause    | Blink pause (secs)                                 | 0.5     |
 
-
 ## Non-overlapping, random blinks in multiple threads
 
-### Usage 
+### Usage
 
 ```bash
 $ ./with_lock.py 
@@ -46,7 +45,7 @@ $ ./with_lock.py
 
 ## Sequential blinks in multiple threads
 
-### Usage 
+### Usage
 
 ```bash
 $ ./with_event.py 
