@@ -16,7 +16,7 @@ public class MultiWorkerOneNotifierWakeAll {
     executor.submit(() -> {
       while (true) {
         long secs = random.nextInt(10);
-        System.out.println(String.format("Notifier thread sleeping %d secs...", secs));
+        System.out.printf("Notifier thread sleeping %d secs...%n", secs);
         Utils.sleepSecs(secs);
 
         System.out.println("Notifier thread waking all worker threads()");
@@ -30,7 +30,7 @@ public class MultiWorkerOneNotifierWakeAll {
              .forEach((i) -> {
                executor.submit(() -> {
                  while (true) {
-                   System.out.println(String.format("Worker thread(%d) waiting...", i));
+                   System.out.printf("Worker thread(%d) waiting...%n", i);
                    try {
                      synchronized (monitor) {
                        monitor.wait();
@@ -40,7 +40,7 @@ public class MultiWorkerOneNotifierWakeAll {
                      e.printStackTrace();
                    }
 
-                   System.out.println(String.format("Main thread(%d) done waiting on monitor", i));
+                   System.out.printf("Main thread(%d) done waiting on monitor%n", i);
                  }
                });
              });

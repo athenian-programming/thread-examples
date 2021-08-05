@@ -58,5 +58,4 @@ public class SynchronizationTypes {
       // Synchronized method actions
     }
   }
-
 }

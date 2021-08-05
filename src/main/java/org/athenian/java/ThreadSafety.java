@@ -35,15 +35,15 @@ public class ThreadSafety {
                                 // Indicate job is complete
                                 latch.countDown();
                               })
-                     );
+             );
 
     // Wait for all jobs to complete
     latch.await();
 
-    System.out.println(String.format("Non-thread-safe counter value = %d", nonThreadSafeCounter.value()));
-    System.out.println(String.format("Synchronized method counter value = %d", synchronizedMethodCounter.value()));
-    System.out.println(String.format("Synchronized block counter value = %d", synchronizedBlockCounter.value()));
-    System.out.println(String.format("Atomic counter value = %d", atomicCounter.value()));
+    System.out.printf("Non-thread-safe counter value = %d%n", nonThreadSafeCounter.value());
+    System.out.printf("Synchronized method counter value = %d%n", synchronizedMethodCounter.value());
+    System.out.printf("Synchronized block counter value = %d%n", synchronizedBlockCounter.value());
+    System.out.printf("Atomic counter value = %d%n", atomicCounter.value());
 
     // Shutdown the thread pool before exiting
     System.out.println("Shutting down Executor");

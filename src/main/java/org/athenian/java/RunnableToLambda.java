@@ -20,8 +20,8 @@ public class RunnableToLambda {
           @Override
           public void run() {
             long secs = random.nextInt(10);
-            System.out.println(String.format("Non-lambda thread sleeping %d secs...", secs));
-            Utils.sleepSecs(secs);
+            System.out.printf("Non-lambda thread sleeping %d secs...%n", secs);
+              Utils.sleepSecs(secs);
             latch.countDown();
             System.out.println("Non-lambda thread finished");
           }
@@ -31,8 +31,8 @@ public class RunnableToLambda {
     executor.submit(
         () -> {
           long secs = random.nextInt(10);
-          System.out.println(String.format("Lambda thread sleeping %d secs...", secs));
-          Utils.sleepSecs(secs);
+            System.out.printf("Lambda thread sleeping %d secs...%n", secs);
+            Utils.sleepSecs(secs);
           latch.countDown();
           System.out.println("Lambda thread finished");
         });

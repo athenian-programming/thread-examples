@@ -34,10 +34,10 @@ public class OneWorkerMultiNotifier {
                executor.submit(() -> {
                  while (true) {
                    long sleepTime = random.nextInt(5);
-                   System.out.println(String.format("Notifier thread(%d) sleeping %d secs...", i, sleepTime));
+                   System.out.printf("Notifier thread(%d) sleeping %d secs...%n", i, sleepTime);
                    Utils.sleepSecs(sleepTime);
 
-                   System.out.println(String.format("Notifier thread(%d) calling notify()", i));
+                   System.out.printf("Notifier thread(%d) calling notify()%n", i);
                    synchronized (monitor) {
                      monitor.notify();
                    }
