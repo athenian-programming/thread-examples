@@ -22,6 +22,7 @@ public class SimpleThread {
 
         // Create a new Thread with an inner class
         Thread t0 = new MyThread();
+        t0.setDaemon(true);
         t0.start();
 
         // Create a new Thread with an anonymous inner class
@@ -35,6 +36,7 @@ public class SimpleThread {
                 System.out.println("AIC thread finished");
             }
         };
+        t1.setDaemon(true);
         t1.start();
 
         // Create a new Thread with a lambda
@@ -45,6 +47,7 @@ public class SimpleThread {
             latch.countDown();
             System.out.println("Lambda thread finished");
         });
+        t2.setDaemon(true);
         t2.start();
 
         // Wait for both threads to complete
