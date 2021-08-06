@@ -50,5 +50,6 @@ public class SimpleThread {
         // Wait for both threads to complete
         System.out.println("Waiting for jobs to finish");
         latch.await();
+        System.out.println("Done");
     }
 }
