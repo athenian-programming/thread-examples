@@ -1,25 +1,23 @@
 package org.athenian.java;
 
-import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class RunnableToLambda {
+public class SimpleExecutor {
 
     public static void main(String[] args)
             throws InterruptedException {
 
-        final ExecutorService executor = Executors.newCachedThreadPool();
-        final Random random = new Random();
         final CountDownLatch latch = new CountDownLatch(2);
+        final ExecutorService executor = Executors.newCachedThreadPool();
 
         // Submit a job using an explicit Runnable
         executor.submit(
                 new Runnable() {
                     @Override
                     public void run() {
-                        long secs = random.nextInt(10);
+                        long secs = 8;
                         System.out.printf("Non-lambda thread sleeping %d secs...%n", secs);
                         Utils.sleepSecs(secs);
                         latch.countDown();
@@ -30,7 +28,7 @@ public class RunnableToLambda {
         // Submit a job using a lambda
         executor.submit(
                 () -> {
-                    long secs = random.nextInt(10);
+                    long secs = 5;
                     System.out.printf("Lambda thread sleeping %d secs...%n", secs);
                     Utils.sleepSecs(secs);
                     latch.countDown();
@@ -38,6 +36,7 @@ public class RunnableToLambda {
                 });
 
         // Wait for both jobs to complete
+        System.out.println("Waiting for jobs to finish");
         latch.await();
 
         // Shutdown the thread pool before exiting

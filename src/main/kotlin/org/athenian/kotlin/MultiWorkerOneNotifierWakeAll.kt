@@ -21,7 +21,7 @@ fun main() {
         }
     }
 
-    (0..3).forEach { i ->
+    repeat(3) { i ->
         executor.submit {
             while (true) {
                 println("Worker thread($i) waiting...")

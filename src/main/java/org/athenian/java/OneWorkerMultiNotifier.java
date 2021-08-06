@@ -3,7 +3,6 @@ package org.athenian.java;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.IntStream;
 
 public class OneWorkerMultiNotifier {
 
@@ -28,20 +27,20 @@ public class OneWorkerMultiNotifier {
         }
       });
 
-      IntStream.range(0, 3)
-              .forEach((i) -> {
-                executor.submit(() -> {
-                  while (true) {
-                    long sleepTime = random.nextInt(5);
-                    System.out.printf("Notifier thread(%d) sleeping %d secs...%n", i, sleepTime);
-                    Utils.sleepSecs(sleepTime);
+      for (int j = 0; j < 3; j++) {
+        int i = j;
+        executor.submit(() -> {
+          while (true) {
+            long sleepTime = random.nextInt(5);
+            System.out.printf("Notifier thread(%d) sleeping %d secs...%n", i, sleepTime);
+            Utils.sleepSecs(sleepTime);
 
-                    System.out.printf("Notifier thread(%d) calling notify()%n", i);
-                    synchronized (monitor) {
-                      monitor.notify();
-                    }
-                  }
-                });
-              });
+            System.out.printf("Notifier thread(%d) calling notify()%n", i);
+            synchronized (monitor) {
+              monitor.notify();
+            }
+          }
+        });
+      }
     }
 }

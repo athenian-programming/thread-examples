@@ -23,7 +23,7 @@ fun main() {
         }
     }
 
-    (0..3).forEach { i ->
+    repeat(3) { i ->
         executor.submit {
             while (true) {
                 val sleepTime = Random.nextInt(5).toLong()

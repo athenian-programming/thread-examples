@@ -16,20 +16,18 @@ fun main() {
     val synchronizedBlockCounter = SynchronizedBlockCounter()
     val atomicCounter = AtomicCounter()
 
-    (0..JOB_COUNT)
-        .forEach { i ->
-            executor.submit {
-                (0..INC_COUNT)
-                    .forEach { j ->
-                        nonThreadSafeCounter.increment()
-                        synchronizedMethodCounter.increment()
-                        synchronizedBlockCounter.increment()
-                        atomicCounter.increment()
-                    }
-                // Indicate job is complete
-                latch.countDown()
+    repeat(JOB_COUNT) { i ->
+        executor.submit {
+            repeat(INC_COUNT) { j ->
+                nonThreadSafeCounter.increment()
+                synchronizedMethodCounter.increment()
+                synchronizedBlockCounter.increment()
+                atomicCounter.increment()
             }
+            // Indicate job is complete
+            latch.countDown()
         }
+    }
 
     // Wait for all jobs to complete
     latch.await()
@@ -44,7 +42,7 @@ fun main() {
     executor.shutdown()
 }
 
-internal class NonThreadSafeCounter {
+class NonThreadSafeCounter {
     var count = 0
 
     fun increment() {
@@ -54,7 +52,7 @@ internal class NonThreadSafeCounter {
     fun value() = count
 }
 
-internal class SynchronizedMethodCounter {
+class SynchronizedMethodCounter {
     var count = 0
 
     @Synchronized
@@ -62,11 +60,10 @@ internal class SynchronizedMethodCounter {
         this.count++
     }
 
-    @Synchronized
     fun value() = count
 }
 
-internal class SynchronizedBlockCounter {
+class SynchronizedBlockCounter {
     var count = 0
 
     fun increment() {
@@ -76,9 +73,7 @@ internal class SynchronizedBlockCounter {
     }
 
     fun value(): Int {
-        synchronized(OBJECT) {
-            return count
-        }
+        return count
     }
 
     companion object {
@@ -86,7 +81,7 @@ internal class SynchronizedBlockCounter {
     }
 }
 
-internal class AtomicCounter {
+class AtomicCounter {
     val count = AtomicInteger(0)
 
     fun increment() {
