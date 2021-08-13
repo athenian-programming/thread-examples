@@ -5,14 +5,17 @@ import java.util.concurrent.Executors
 
 fun main() {
 
-    val JOB_COUNT = 1000
+    val JOB_COUNT = 100
+    val INC_COUNT = 1000
     val latch = CountDownLatch(JOB_COUNT)
     val executor = Executors.newCachedThreadPool()
     var count = 0
 
     repeat(JOB_COUNT) { i ->
         executor.submit {
-            count++
+            repeat(INC_COUNT) {
+                count++
+            }
             latch.countDown()
         }
     }

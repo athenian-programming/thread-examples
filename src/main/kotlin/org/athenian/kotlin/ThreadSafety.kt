@@ -18,7 +18,7 @@ fun main() {
 
     repeat(JOB_COUNT) { i ->
         executor.submit {
-            repeat(INC_COUNT) { j ->
+            repeat(INC_COUNT) {
                 nonThreadSafeCounter.increment()
                 synchronizedMethodCounter.increment()
                 synchronizedBlockCounter.increment()
