@@ -11,7 +11,7 @@ public class ThreadSafety {
             throws InterruptedException {
 
         final int JOB_COUNT = 100;
-        final int INC_COUNT = 1000;
+        final int INC_COUNT = 1_000;
 
         final ExecutorService executor = Executors.newCachedThreadPool();
         final CountDownLatch latch = new CountDownLatch(JOB_COUNT);

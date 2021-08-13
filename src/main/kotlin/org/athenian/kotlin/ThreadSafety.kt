@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger
 fun main() {
 
     val JOB_COUNT = 100
-    val INC_COUNT = 1000
+    val INC_COUNT = 1_000
 
     val executor = Executors.newCachedThreadPool()
     val latch = CountDownLatch(JOB_COUNT)

@@ -18,7 +18,7 @@ fun main() {
                 job.run()
             } else {
                 println("Waiting for jobs in ${Thread.currentThread()}")
-                Thread.sleep(1000)
+                Thread.sleep(1_000)
             }
         }
     }
