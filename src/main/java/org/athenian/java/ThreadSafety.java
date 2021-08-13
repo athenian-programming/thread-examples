@@ -76,7 +76,7 @@ public class ThreadSafety {
         int count = 0;
 
         void increment() {
-            synchronized (OBJECT) {
+            synchronized (this /* OBJECT */) {
                 this.count++;
             }
         }

@@ -67,7 +67,7 @@ class SynchronizedBlockCounter {
     var count = 0
 
     fun increment() {
-        synchronized(OBJECT) {
+        synchronized(this /* OBJECT */) {
             count++
         }
     }
