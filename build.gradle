@@ -22,15 +22,6 @@ dependencies {
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs 'src/main/java'
-            srcDirs 'src/main/kotlin'
-        }
-    }
-}
-
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
