@@ -1,18 +1,17 @@
 package org.athenian.kotlin
 
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.Executors
+import kotlin.concurrent.thread
 
 fun main() {
 
     val JOB_COUNT = 100
     val INC_COUNT = 1_000
     val latch = CountDownLatch(JOB_COUNT)
-    val executor = Executors.newCachedThreadPool()
     var count = 0
 
     repeat(JOB_COUNT) { i ->
-        executor.submit {
+        thread {
             repeat(INC_COUNT) {
                 count++
             }
@@ -24,7 +23,4 @@ fun main() {
     latch.await()
 
     println("count = $count")
-
-    // Shutdown the thread pool before exiting
-    executor.shutdown()
 }
