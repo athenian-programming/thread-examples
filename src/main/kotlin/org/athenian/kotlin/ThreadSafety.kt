@@ -1,27 +1,29 @@
 package org.athenian.kotlin
 
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.thread
 
 fun main() {
 
     val JOB_COUNT = 100
     val INC_COUNT = 1_000
 
-    val executor = Executors.newCachedThreadPool()
     val latch = CountDownLatch(JOB_COUNT)
     val nonThreadSafeCounter = NonThreadSafeCounter()
     val synchronizedMethodCounter = SynchronizedMethodCounter()
     val synchronizedBlockCounter = SynchronizedBlockCounter()
+    val lockCounter = LockCounter()
     val atomicCounter = AtomicCounter()
 
     repeat(JOB_COUNT) { i ->
-        executor.submit {
+        thread {
             repeat(INC_COUNT) {
                 nonThreadSafeCounter.increment()
                 synchronizedMethodCounter.increment()
                 synchronizedBlockCounter.increment()
+                lockCounter.increment()
                 atomicCounter.increment()
             }
             // Indicate job is complete
@@ -35,11 +37,8 @@ fun main() {
     println("Non-thread-safe counter value = ${nonThreadSafeCounter.value()}")
     println("Synchronized method counter value = ${synchronizedMethodCounter.value()}")
     println("Synchronized block counter value = ${synchronizedBlockCounter.value()}")
+    println("Lock counter value = ${lockCounter.value()}")
     println("Atomic counter value = ${atomicCounter.value()}")
-
-    // Shutdown the thread pool before exiting
-    println("Shutting down Executor")
-    executor.shutdown()
 }
 
 class NonThreadSafeCounter {
@@ -79,6 +78,22 @@ class SynchronizedBlockCounter {
     companion object {
         private val OBJECT = Any()
     }
+}
+
+class LockCounter {
+    var count = 0
+    val lock = ReentrantLock()
+
+    fun increment() {
+        lock.lock()
+        try {
+            count++
+        } finally {
+            lock.unlock()
+        }
+    }
+
+    fun value() = count
 }
 
 class AtomicCounter {

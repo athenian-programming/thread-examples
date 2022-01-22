@@ -18,7 +18,7 @@ fun main() {
     t0.start()
 
     // Create a new Thread
-    thread(start = true, name = "MyThread") {
+    thread(name = "MyThread") {
         val secs: Long = 2000
         System.out.printf("Thread {${Thread.currentThread()} sleeping %d ms...%n", secs)
         Thread.sleep(secs)
