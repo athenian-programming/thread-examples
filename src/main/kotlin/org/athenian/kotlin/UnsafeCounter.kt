@@ -10,8 +10,9 @@ fun main() {
     val latch = CountDownLatch(JOB_COUNT)
     var count = 0
 
-    repeat(JOB_COUNT) { i ->
-        thread {
+    repeat(JOB_COUNT) {
+        // Fire off a thread
+        thread(name = "Thread-$it") {
             repeat(INC_COUNT) {
                 count++
             }
